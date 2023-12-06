@@ -1,0 +1,42 @@
+from PIL import Image, ImageFilter
+
+# создаем класс
+class ImageEditor():
+    # создаем конструктор класса
+    def __init__(self, filename):
+        self.filename = filename # имя файла при открытии
+        self.original = None  # ссылка на оригинал изображения
+        self.changed = list()  # список измененных изображений
+
+    def open(self):
+        # открыть файл с изображением
+        try:
+            self.original = Image.open(self.filename)
+        except:
+            print('Файл не найден!')
+        self.original.show()  # показать оригинал изображения
+
+    def do_bw(self):
+        gray = self.original.convert('L')
+        self.changed.append(gray)
+        gray.save('gray.jpg')
+
+    def do_rotate(self):
+        rotated = self.original.transpose(Image.ROTATE_180)
+        self.changed.append(rotated)
+        rotated.save('rotated.jpg')
+
+    def do_filter(self):
+        filtered = self.original.filter(ImageFilter.SMOOTH)
+        self.changed.append(filtered)
+        filtered.save('filtered.jpg')
+
+# создаем объект класса с данными картинки-оригинала
+MyImage = ImageEditor('original.jpg')
+MyImage.open()
+MyImage.do_bw()
+MyImage.do_rotate()
+MyImage.do_filter()
+
+for i in MyImage.changed:
+    i.show()
